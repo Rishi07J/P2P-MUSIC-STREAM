@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>P2P Music Stream</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>JukeLink</h1>
+    <h2>Jam Together, P2P Forever!</h2>
+    <p class="instructions">Want to swap tunes with your friends? JukeLink lets you do that with ease. </br>
+      Upload, seed, and share a magnet link to jam out to new tracks with your group — no hassle, just good vibes.</p>
+    <button onclick="scrollToSection('uploadSection')">Upload Music</button>
+    <button onclick="scrollToSection('streamSection')">Stream Music</button>
+  </header>
+
+  <!-- Upload Section -->
+  <section id="uploadSection">
+    <h2>1. Share a Music File</h2>
+    <p class="instructions">Upload a music file to generate a unique magnet link, which you can share with others.</p>
+    <input type="text" id="userName" placeholder="Enter Your Name" />
+    <label>
+      <input type="checkbox" id="anonymousOption" onchange="toggleNameRequirement()" /> Stay Anonymous
+    </label>
+    <input type="file" id="fileInput" />
+    <button id="generateBtn" onclick="seedFile()">Generate Magnet Link</button>
+    <p><strong>Magnet Link:</strong></p>
+    <textarea id="magnetLink" rows="3" cols="60" readonly></textarea>
+    <button class="copy-button" onclick="copyMagnetLink()">Copy Magnet Link</button>
+  </section>
+
+  <!-- Stream Section -->
+  <section id="streamSection">
+    <h2>2. Stream Using a Magnet Link</h2>
+    <p class="instructions">Paste the magnet link of a music file to start streaming directly.</p>
+    <input type="text" id="magnetInput" placeholder="Paste Magnet Link" />
+    <button onclick="startStreaming()">Stream</button>
+    <button class="paste-button" onclick="pasteMagnetLink()">Paste Magnet Link</button>
+
+    <div id="loadingSpinner" class="spinner" style="display: none;"></div>
+
+    <audio id="audioPlayer" controls autoplay style="display: none;"></audio>
+
+    <div id="songDetails" class="song-details"></div>
+  </section>
+
+  <script>
+    function scrollToSection(sectionId) {
+      document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copyMagnetLink() {
+      var copyText = document.getElementById("magnetLink");
+      copyText.select();
+      document.execCommand("copy");
+      alert("Magnet link copied!");
+    }
+
+    function pasteMagnetLink() {
+      navigator.clipboard.readText().then(text => {
+        document.getElementById("magnetInput").value = text;
+      }).catch(err => {
+        alert('Failed to read clipboard contents: ' + err);
+      });
+    }
+
+    function toggleNameRequirement() {
+      const isAnonymous = document.getElementById("anonymousOption").checked;
+      const userNameInput = document.getElementById("userName");
+
+      if (isAnonymous) {
+        userNameInput.removeAttribute("required");
+      } else {
+        userNameInput.setAttribute("required", "required");
+      }
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
