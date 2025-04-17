@@ -33,7 +33,7 @@ function startStreaming() {
   const audio = document.getElementById('audioPlayer');
   const songDetails = document.getElementById('songDetails');
   const loadingSpinner = document.getElementById('loadingSpinner');
-  const chunkList = document.getElementById('chunkList'); // <--
+  const chunkList = document.getElementById('chunkList'); // <-- for chunk details
 
   if (!magnetURI) {
     alert('Please paste a magnet link.');
@@ -75,7 +75,7 @@ function startStreaming() {
 
       chunkList.insertBefore(li, chunkList.firstChild);
       if (chunkList.childNodes.length > 20) {
-        chunkList.removeChild(chunkList.lastChild);
+        chunkList.removeChild(chunkList.lastChild); // Keep the list size manageable
       }
     });
 
