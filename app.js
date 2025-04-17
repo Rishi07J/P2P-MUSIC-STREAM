@@ -60,24 +60,37 @@ function startStreaming() {
       return;
     }
 
-    // Chunk and peer tracker
-    torrent.on('download', bytes => {
+    // Add this just above torrent.on('download')
+const downloadedChunks = new Set();
+
+torrent.on('download', () => {
+  const totalPieces = torrent.pieces.length;
+
+  // Display total number of pieces (you need an HTML element with id="totalPiecesInfo")
+  const totalPiecesElement = document.getElementById('totalPiecesInfo');
+  if (totalPiecesElement) {
+    totalPiecesElement.textContent = `Total Pieces: ${totalPieces}`;
+  }
+
+  torrent.pieces.forEach((piece, index) => {
+    if (piece.verified && !downloadedChunks.has(index)) {
+      downloadedChunks.add(index);
+
       const peers = torrent.wires
         .filter(wire => wire.peerId)
         .map(wire => wire.peerId.toString('hex').slice(0, 8));
 
-      const chunkIndex = torrent.pieces.reduce((count, piece, idx) =>
-        piece && piece.verified ? idx : count, 0
-      );
-
       const li = document.createElement('li');
-      li.textContent = `Chunk ${chunkIndex} downloaded from: ${peers.join(', ')}`;
-
+      li.textContent = `Chunk ${index} downloaded from: ${peers.join(', ')}`;
       chunkList.insertBefore(li, chunkList.firstChild);
+
       if (chunkList.childNodes.length > 20) {
-        chunkList.removeChild(chunkList.lastChild); // Keep the list size manageable
+        chunkList.removeChild(chunkList.lastChild);
       }
-    });
+    }
+  });
+});
+
 
     file.getBlobURL((err, url) => {
       loadingSpinner.style.display = 'none';
