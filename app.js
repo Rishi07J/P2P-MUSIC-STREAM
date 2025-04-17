@@ -34,6 +34,7 @@ function startStreaming() {
   const songDetails = document.getElementById('songDetails');
   const loadingSpinner = document.getElementById('loadingSpinner');
   const chunkList = document.getElementById('chunkList');
+  const peerStats = document.getElementById('peerStats'); // Element for peer stats
 
   if (!magnetURI) {
     alert('Please paste a magnet link.');
@@ -42,6 +43,7 @@ function startStreaming() {
 
   loadingSpinner.style.display = 'block';
   chunkList.innerHTML = '';
+  peerStats.innerHTML = ''; // Clear previous peer stats
 
   let uploader = 'Unknown';
   const match = magnetURI.match(/&uploader=([^&]+)/);
@@ -66,29 +68,40 @@ function startStreaming() {
       return;
     }
 
+    let totalPeers = 0; // Track number of peers
+
+    // Track download progress and peer information
     torrent.on('download', bytes => {
-      console.log('Downloaded bytes:', bytes);
-    
       const peers = torrent.wires
         .filter(wire => wire.peerId)
         .map(wire => wire.peerId.toString('hex').slice(0, 8));
-    
+
+      // Calculate number of peers
+      totalPeers = peers.length;
+
       const latestPieceIndex = Math.floor(torrent.downloaded / torrent.pieceLength);
-    
+
       const li = document.createElement('li');
       li.textContent = `Chunk ${latestPieceIndex} downloaded from: ${peers.join(', ')}`;
       chunkList.insertBefore(li, chunkList.firstChild);
-    
-      if (chunkList.childNodes.length > 20) {
-        chunkList.removeChild(chunkList.lastChild);
-      }
-    });
-    
 
-    // ✅ STREAM AUDIO DIRECTLY
-    file.renderTo(audio, {
-      autoplay: true
-    }, err => {
+      if (chunkList.childNodes.length > 20) {
+        chunkList.removeChild(chunkList.lastChild); // Keep list size manageable
+      }
+
+      // Show peer info (number of peers, IPs, and speeds)
+      const peerInfo = torrent.wires.map((wire, index) => {
+        const ip = wire.remoteAddress || "Unknown IP";
+        const downloadSpeed = wire.downloadSpeed / 1024; // Convert bytes to KB
+        const uploadSpeed = wire.uploadSpeed / 1024; // Convert bytes to KB
+        return `<div>Peer ${index + 1} IP: ${ip} | Down: ${downloadSpeed.toFixed(2)} KB/s | Up: ${uploadSpeed.toFixed(2)} KB/s</div>`;
+      }).join('');
+
+      peerStats.innerHTML = `<p>Total Peers: ${totalPeers}</p>` + peerInfo;
+    });
+
+    // Stream audio directly
+    file.renderTo(audio, { autoplay: true }, err => {
       loadingSpinner.style.display = 'none';
 
       if (err) {
@@ -101,3 +114,4 @@ function startStreaming() {
     });
   });
 }
+
