@@ -33,7 +33,7 @@ function startStreaming() {
   const audio = document.getElementById('audioPlayer');
   const songDetails = document.getElementById('songDetails');
   const loadingSpinner = document.getElementById('loadingSpinner');
-  const chunkList = document.getElementById('chunkList'); // <-- for chunk details
+  const chunkList = document.getElementById('chunkList');
 
   if (!magnetURI) {
     alert('Please paste a magnet link.');
@@ -41,7 +41,7 @@ function startStreaming() {
   }
 
   loadingSpinner.style.display = 'block';
-  chunkList.innerHTML = ''; // Clear previous chunk stats
+  chunkList.innerHTML = '';
 
   let uploader = 'Unknown';
   const match = magnetURI.match(/&uploader=([^&]+)/);
@@ -50,6 +50,12 @@ function startStreaming() {
   }
 
   client.add(magnetURI, torrent => {
+    console.log('Torrent added:', torrent.infoHash);
+    console.log('Number of pieces:', torrent.pieces.length);
+    console.log('Peers:', torrent.numPeers);
+
+    document.getElementById('totalPieces').textContent = `Total Pieces: ${torrent.pieces.length}`;
+
     const file = torrent.files.find(file =>
       file.name.endsWith('.mp3') || file.name.endsWith('.wav')
     );
@@ -60,49 +66,40 @@ function startStreaming() {
       return;
     }
 
-    // Add this just above torrent.on('download')
-const downloadedChunks = new Set();
-
-torrent.on('download', () => {
-  const totalPieces = torrent.pieces.length;
-
-  // Display total number of pieces (you need an HTML element with id="totalPiecesInfo")
-  const totalPiecesElement = document.getElementById('totalPiecesInfo');
-  if (totalPiecesElement) {
-    totalPiecesElement.textContent = `Total Pieces: ${totalPieces}`;
-  }
-
-  torrent.pieces.forEach((piece, index) => {
-    if (piece.verified && !downloadedChunks.has(index)) {
-      downloadedChunks.add(index);
+    torrent.on('download', bytes => {
+      console.log('Downloaded bytes:', bytes);
 
       const peers = torrent.wires
         .filter(wire => wire.peerId)
         .map(wire => wire.peerId.toString('hex').slice(0, 8));
 
+      const downloadedPieces = torrent.pieces
+        .map((p, i) => (p && p.verified ? i : -1))
+        .filter(i => i !== -1);
+
+      const latestPiece = downloadedPieces[downloadedPieces.length - 1];
+
       const li = document.createElement('li');
-      li.textContent = `Chunk ${index} downloaded from: ${peers.join(', ')}`;
+      li.textContent = `Chunk ${latestPiece} downloaded from: ${peers.join(', ')}`;
       chunkList.insertBefore(li, chunkList.firstChild);
 
       if (chunkList.childNodes.length > 20) {
         chunkList.removeChild(chunkList.lastChild);
       }
-    }
-  });
-});
+    });
 
-
-    file.getBlobURL((err, url) => {
+    // ✅ STREAM AUDIO DIRECTLY
+    file.renderTo(audio, {
+      autoplay: true
+    }, err => {
       loadingSpinner.style.display = 'none';
+
       if (err) {
-        console.error('Error getting blob URL:', err);
+        console.error('Streaming error:', err);
         return;
       }
 
-      audio.src = url;
       audio.style.display = 'block';
-      audio.play();
-
       songDetails.innerHTML = `Now Playing: ${file.name}<br>Uploaded by: ${uploader}`;
     });
   });
