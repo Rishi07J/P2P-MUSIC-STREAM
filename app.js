@@ -68,25 +68,22 @@ function startStreaming() {
 
     torrent.on('download', bytes => {
       console.log('Downloaded bytes:', bytes);
-
+    
       const peers = torrent.wires
         .filter(wire => wire.peerId)
         .map(wire => wire.peerId.toString('hex').slice(0, 8));
-
-      const downloadedPieces = torrent.pieces
-        .map((p, i) => (p && p.verified ? i : -1))
-        .filter(i => i !== -1);
-
-      const latestPiece = downloadedPieces[downloadedPieces.length - 1];
-
+    
+      const latestPieceIndex = Math.floor(torrent.downloaded / torrent.pieceLength);
+    
       const li = document.createElement('li');
-      li.textContent = `Chunk ${latestPiece} downloaded from: ${peers.join(', ')}`;
+      li.textContent = `Chunk ${latestPieceIndex} downloaded from: ${peers.join(', ')}`;
       chunkList.insertBefore(li, chunkList.firstChild);
-
+    
       if (chunkList.childNodes.length > 20) {
         chunkList.removeChild(chunkList.lastChild);
       }
     });
+    
 
     // ✅ STREAM AUDIO DIRECTLY
     file.renderTo(audio, {
