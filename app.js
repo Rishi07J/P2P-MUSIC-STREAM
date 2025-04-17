@@ -32,15 +32,16 @@ function startStreaming() {
   const magnetURI = document.getElementById('magnetInput').value;
   const audio = document.getElementById('audioPlayer');
   const songDetails = document.getElementById('songDetails');
-  const loadingSpinner = document.getElementById('loadingSpinner'); // <--
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const chunkList = document.getElementById('chunkList'); // <--
 
   if (!magnetURI) {
     alert('Please paste a magnet link.');
     return;
   }
 
-  // Show throbber
-  loadingSpinner.style.display = 'block'; // <--
+  loadingSpinner.style.display = 'block';
+  chunkList.innerHTML = ''; // Clear previous chunk stats
 
   let uploader = 'Unknown';
   const match = magnetURI.match(/&uploader=([^&]+)/);
@@ -54,13 +55,32 @@ function startStreaming() {
     );
 
     if (!file) {
-      loadingSpinner.style.display = 'none'; // <--
+      loadingSpinner.style.display = 'none';
       alert('No audio file (.mp3 or .wav) found in torrent.');
       return;
     }
 
+    // Chunk and peer tracker
+    torrent.on('download', bytes => {
+      const peers = torrent.wires
+        .filter(wire => wire.peerId)
+        .map(wire => wire.peerId.toString('hex').slice(0, 8));
+
+      const chunkIndex = torrent.pieces.reduce((count, piece, idx) =>
+        piece && piece.verified ? idx : count, 0
+      );
+
+      const li = document.createElement('li');
+      li.textContent = `Chunk ${chunkIndex} downloaded from: ${peers.join(', ')}`;
+
+      chunkList.insertBefore(li, chunkList.firstChild);
+      if (chunkList.childNodes.length > 20) {
+        chunkList.removeChild(chunkList.lastChild);
+      }
+    });
+
     file.getBlobURL((err, url) => {
-      loadingSpinner.style.display = 'none'; // <--
+      loadingSpinner.style.display = 'none';
       if (err) {
         console.error('Error getting blob URL:', err);
         return;

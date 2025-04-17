@@ -197,3 +197,24 @@ section + section {
   animation: spin 1s linear infinite;
   display: none;
 }
+.chunk-container {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #ffe6f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
+  width: 80%;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.chunk-container h3 {
+  color: #ff1493;
+  margin-bottom: 15px;
+}
+
+#chunkList li {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 5px;
+}
