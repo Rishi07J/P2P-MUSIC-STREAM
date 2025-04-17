@@ -91,10 +91,10 @@ function startStreaming() {
 
       // Show peer info (number of peers, IPs, and speeds)
       const peerInfo = torrent.wires.map((wire, index) => {
-        const ip = wire.remoteAddress || "Unknown IP";
-        const downloadSpeed = wire.downloadSpeed / 1024; // Convert bytes to KB
-        const uploadSpeed = wire.uploadSpeed / 1024; // Convert bytes to KB
-        return `<div>Peer ${index + 1} IP: ${ip} | Down: ${downloadSpeed.toFixed(2)} KB/s | Up: ${uploadSpeed.toFixed(2)} KB/s</div>`;
+        const ip = wire.remoteAddress || "Unknown IP"; // If IP is unavailable, show "Unknown IP"
+        const downloadSpeed = wire.downloadSpeed ? (wire.downloadSpeed / 1024).toFixed(2) : 0; // Convert to KB and ensure it's not NaN
+        const uploadSpeed = wire.uploadSpeed ? (wire.uploadSpeed / 1024).toFixed(2) : 0; // Convert to KB and ensure it's not NaN
+        return `<div>Peer ${index + 1} IP: ${ip} | Down: ${downloadSpeed} KB/s | Up: ${uploadSpeed} KB/s</div>`;
       }).join('');
 
       peerStats.innerHTML = `<p>Total Peers: ${totalPeers}</p>` + peerInfo;
@@ -114,4 +114,3 @@ function startStreaming() {
     });
   });
 }
-
