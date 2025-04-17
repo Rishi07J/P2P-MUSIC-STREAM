@@ -34,7 +34,7 @@ function startStreaming() {
   const songDetails = document.getElementById('songDetails');
   const loadingSpinner = document.getElementById('loadingSpinner');
   const chunkList = document.getElementById('chunkList');
-  const peerStats = document.getElementById('peerStats'); // Element for peer stats
+  const peerStats = document.getElementById('peerStats');
 
   if (!magnetURI) {
     alert('Please paste a magnet link.');
@@ -43,7 +43,7 @@ function startStreaming() {
 
   loadingSpinner.style.display = 'block';
   chunkList.innerHTML = '';
-  peerStats.innerHTML = ''; // Clear previous peer stats
+  peerStats.innerHTML = '';
 
   let uploader = 'Unknown';
   const match = magnetURI.match(/&uploader=([^&]+)/);
@@ -53,9 +53,6 @@ function startStreaming() {
 
   client.add(magnetURI, torrent => {
     console.log('Torrent added:', torrent.infoHash);
-    console.log('Number of pieces:', torrent.pieces.length);
-    console.log('Peers:', torrent.numPeers);
-
     document.getElementById('totalPieces').textContent = `Total Pieces: ${torrent.pieces.length}`;
 
     const file = torrent.files.find(file =>
@@ -68,16 +65,10 @@ function startStreaming() {
       return;
     }
 
-    let totalPeers = 0; // Track number of peers
-
-    // Track download progress and peer information
     torrent.on('download', bytes => {
       const peers = torrent.wires
         .filter(wire => wire.peerId)
         .map(wire => wire.peerId.toString('hex').slice(0, 8));
-
-      // Calculate number of peers
-      totalPeers = peers.length;
 
       const latestPieceIndex = Math.floor(torrent.downloaded / torrent.pieceLength);
 
@@ -86,26 +77,17 @@ function startStreaming() {
       chunkList.insertBefore(li, chunkList.firstChild);
 
       if (chunkList.childNodes.length > 20) {
-        chunkList.removeChild(chunkList.lastChild); // Keep list size manageable
+        chunkList.removeChild(chunkList.lastChild);
       }
 
-      // Show peer info (number of peers, IPs, and speeds)
       const peerInfo = torrent.wires.map((wire, index) => {
-        const ip = wire.remoteAddress || "Unknown IP"; // If IP is unavailable, show "Unknown IP"
-        
-        // Fallback for speeds if they are NaN or undefined
-        const downloadSpeed = wire.downloadSpeed && !isNaN(wire.downloadSpeed) ? (wire.downloadSpeed / 1024).toFixed(2) : 0; // Convert to KB and ensure it's not NaN
-        const uploadSpeed = wire.uploadSpeed && !isNaN(wire.uploadSpeed) ? (wire.uploadSpeed / 1024).toFixed(2) : 0; // Convert to KB and ensure it's not NaN
-        
-        console.log(`Peer ${index + 1}: IP: ${ip}, Down: ${downloadSpeed} KB/s, Up: ${uploadSpeed} KB/s`);
-
-        return `<div>Peer ${index + 1} IP: ${ip} | Down: ${downloadSpeed} KB/s | Up: ${uploadSpeed} KB/s</div>`;
+        const ip = wire.remoteAddress || "Unknown IP";
+        return `<div>Peer ${index + 1} IP: ${ip}</div>`;
       }).join('');
 
-      peerStats.innerHTML = `<p>Total Peers: ${totalPeers}</p>` + peerInfo;
+      peerStats.innerHTML = `<p>Total Peers: ${peers.length}</p>` + peerInfo;
     });
 
-    // Stream audio directly
     file.renderTo(audio, { autoplay: true }, err => {
       loadingSpinner.style.display = 'none';
 
@@ -119,4 +101,5 @@ function startStreaming() {
     });
   });
 }
+
 

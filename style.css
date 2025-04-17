@@ -218,3 +218,47 @@ section + section {
   color: #444;
   margin-bottom: 5px;
 }
+.peer-stats {
+  margin-top: 20px;
+  background-color: #f4f4f4;
+  padding: 15px;
+  border-radius: 10px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.peer-stats p {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.peer-stats div {
+  padding: 6px 10px;
+  border-bottom: 1px solid #ddd;
+  color: #555;
+}
+
+.peer-stats div:last-child {
+  border-bottom: none;
+}
+
+.chunk-list {
+  margin-top: 20px;
+  padding-left: 20px;
+  font-family: monospace;
+  font-size: 13px;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fefefe;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.chunk-list li {
+  margin-bottom: 5px;
+  color: #444;
+}
