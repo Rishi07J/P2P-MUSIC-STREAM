@@ -1,4 +1,4 @@
-/* Reset some basic styles */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -6,156 +6,216 @@
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f7e5f4;  /* Light pink background */
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #f9e6f3 0%, #f7e5f4 100%);
   color: #333;
+  line-height: 1.6;
   overflow-x: hidden;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 header {
   text-align: center;
-  padding: 50px 20px;
-  margin-top: 20px;
+  padding: 70px 20px 50px;
+  background: linear-gradient(180deg, rgba(255,242,252,0.8) 0%, rgba(247,229,244,0.6) 100%);
+  border-bottom: 1px solid rgba(255, 79, 158, 0.1);
+  margin-bottom: 30px;
 }
 
+/* Typography */
 h1 {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #ff4f9e;  /* Pink title color */
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #ff4f9e;
+  text-shadow: 2px 2px 4px rgba(255, 79, 158, 0.2);
   letter-spacing: 2px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  width: 70%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #ff4f9e, transparent);
+  bottom: -8px;
+  left: 15%;
 }
 
 h2 {
   font-size: 1.8rem;
-  color: #ff2a73;  /* Darker pink for subheading */
-  margin-bottom: 30px;
+  color: #ff2a73;
+  margin-bottom: 25px;
+  font-weight: 600;
 }
 
 p.instructions {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 20px;
+  font-size: 1.15rem;
+  color: #555;
+  margin-bottom: 25px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
 }
 
-p {
-  margin-bottom: 20px;
-}
-
-/* Button styling with cool hover animation */
-button {
-  background-color: #ff4f9e;  /* Pink background */
+/* Buttons */
+button,
+.copy-button,
+.paste-button {
+  background: linear-gradient(135deg, #ff4f9e 0%, #ff2a73 100%);
   color: white;
-  padding: 15px 30px;
-  font-size: 1.2rem;
+  padding: 14px 28px;
+  font-size: 1.05rem;
+  font-weight: 600;
   border: none;
-  border-radius: 8px;
-  margin: 10px;
+  border-radius: 12px;
+  margin: 12px 8px;
   cursor: pointer;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  box-shadow: 0 8px 16px rgba(255, 79, 158, 0.2);
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(255, 79, 158, 0.25);
+  width: auto;
+  min-width: 160px;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
 }
 
-button:hover {
-  background-color: #ff1f6a;  /* Darker pink on hover */
-  transform: scale(1.1);
+button:hover,
+.copy-button:hover,
+.paste-button:hover {
+  background: linear-gradient(135deg, #ff2a73 0%, #ff005a 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(255, 47, 106, 0.35);
 }
 
-button:active {
-  transform: scale(1);
-  box-shadow: 0 4px 8px rgba(255, 79, 158, 0.4);
+button:active,
+.copy-button:active,
+.paste-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 5px 15px rgba(255, 79, 158, 0.2);
 }
 
-button:focus {
-  outline: none;
+button::before,
+.copy-button::before,
+.paste-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
 }
 
-/* Input styling */
+button:hover::before,
+.copy-button:hover::before,
+.paste-button:hover::before {
+  left: 100%;
+}
+
+/* Input Fields */
 input[type="file"],
 input[type="text"],
 textarea {
-  width: 80%;
-  padding: 10px;
-  border-radius: 8px;
-  margin: 10px 0;
-  font-size: 1rem;
+  width: 100%;
+  max-width: 500px;
+  padding: 15px 20px;
+  border-radius: 12px;
+  margin: 12px 0;
+  font-size: 1.05rem;
+  border: 2px solid rgba(204, 204, 204, 0.5);
   background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-input[type="file"]:focus,
-input[type="text"]:focus,
-textarea:focus {
-  background-color: #f0f0f0;
-  outline: none;
-}
-
-textarea {
-  resize: none;
-}
-
-audio {
-  margin-top: 20px;
-  width: 80%;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(255, 79, 158, 0.2);
-}
-
-/* Add copy and paste button styles */
-.copy-button,
-.paste-button {
-  background-color: #ff6f9e;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
+input[type="file"] {
+  padding: 12px;
+  background-color: #fff9fc;
   cursor: pointer;
-  font-size: 1rem;
-  transition: transform 0.3s ease;
-  border: none;
 }
 
-.copy-button:hover,
-.paste-button:hover {
-  background-color: #ff2a73;
-  transform: scale(1.1);
+input:focus,
+textarea:focus {
+  background-color: #fff;
+  outline: none;
+  border-color: #ff4f9e;
+  box-shadow: 0 4px 15px rgba(255, 79, 158, 0.15);
+  transform: translateY(-2px);
 }
 
-.copy-button:active,
-.paste-button:active {
-  transform: scale(1);
+input::placeholder {
+  color: #aaa;
 }
 
-/* Scrolling section */
-section {
-  height: 100vh;
+label {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+  font-size: 1.05rem;  
+  color: #555;
+}
+
+input[type="checkbox"] {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Sections */
+section {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto 80px;
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 40px 25px;
   text-align: center;
-  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(255, 79, 158, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, #ff4f9e, #ff2a73);
+}
+
+section h2 {
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px dashed rgba(255, 79, 158, 0.2);
+  width: 100%;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-section + section {
-  margin-top: 50px;
-}
-
-/* Loading spinner */
+/* Spinner */
 .spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #ff4f9e;
+  margin: 25px auto;
+  width: 60px;
+  height: 60px;
+  border: 6px solid rgba(255, 79, 158, 0.1);
+  border-top: 6px solid #ff4f9e;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 2s linear infinite;
-  margin-top: 20px;
+  animation: spin 1s linear infinite;
+  display: none;
 }
 
 @keyframes spin {
@@ -163,102 +223,220 @@ section + section {
   100% { transform: rotate(360deg); }
 }
 
-/* Song details */
+/* Audio Player */
+audio {
+  margin-top: 30px;
+  width: 100%;
+  max-width: 550px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(255, 79, 158, 0.15);
+  height: 50px;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: #ffe6f2;
+}
+
+audio::-webkit-media-controls-play-button {
+  background-color: #ff4f9e;
+  border-radius: 50%;
+}
+
+audio::-webkit-media-controls-volume-slider {
+  background-color: #ff4f9e;
+  border-radius: 25px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* Song Details */
 .song-details {
   font-size: 1.2rem;
-  color: #555;
-  margin-top: 20px;
-  font-weight: bold;
+  color: #444;
+  margin-top: 25px;
+  font-weight: 600;
+  padding: 15px 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  border-left: 4px solid #ff4f9e;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  text-align: left;
+  width: 100%;
+  max-width: 550px;
 }
 
-/* Responsive design */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 2rem;
-  }
-
-  button {
-    width: 80%;
-    padding: 10px;
-  }
-
-  input[type="text"], input[type="file"], textarea {
-    width: 90%;
-  }
-}
-
-.spinner {
-  margin: 20px auto;
-  width: 48px;
-  height: 48px;
-  border: 5px solid #ccc;
-  border-top: 5px solid #ff4f9e;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  display: none;
-}
+/* Chunk Container */
 .chunk-container {
-  margin-top: 30px;
-  padding: 20px;
-  background-color: #ffe6f0;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
-  width: 80%;
-  max-height: 300px;
+  margin-top: 35px;
+  padding: 25px;
+  background-color: #fff8fb;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(255, 105, 180, 0.1);
+  width: 100%;
+  max-width: 750px;
   overflow-y: auto;
+  max-height: 350px;
+  border: 1px solid rgba(255, 79, 158, 0.1);
 }
 
 .chunk-container h3 {
   color: #ff1493;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+.chunk-container h3::after {
+  content: '';
+  position: absolute;
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(90deg, #ff4f9e, transparent);
+  bottom: 0;
+  left: 20%;
+}
+
+#chunkList {
+  list-style-type: none;
 }
 
 #chunkList li {
   font-size: 1rem;
   color: #444;
-  margin-bottom: 5px;
-}
-.peer-stats {
-  margin-top: 20px;
-  background-color: #f4f4f4;
-  padding: 15px;
-  border-radius: 10px;
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.peer-stats p {
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-.peer-stats div {
-  padding: 6px 10px;
-  border-bottom: 1px solid #ddd;
-  color: #555;
-}
-
-.peer-stats div:last-child {
-  border-bottom: none;
-}
-
-.chunk-list {
-  margin-top: 20px;
-  padding-left: 20px;
-  font-family: monospace;
-  font-size: 13px;
-  max-height: 200px;
-  overflow-y: auto;
-  background-color: #fefefe;
-  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  border-left: 3px solid #ff4f9e;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
 }
 
-.chunk-list li {
-  margin-bottom: 5px;
-  color: #444;
+#chunkList li:hover {
+  transform: translateX(5px);
 }
+
+/* Peer Stats */
+#peerStats {
+  margin-top: 30px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  font-size: 1rem;
+  line-height: 1.6;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+  width: 100%;
+  max-width: 750px;
+  border: 1px solid rgba(255, 79, 158, 0.1);
+}
+
+#peerStats p {
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.2rem;
+  padding-bottom: 10px;
+  border-bottom: 2px dashed rgba(255, 79, 158, 0.2);
+}
+
+#peerStats div {
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  color: #555;
+  background-color: #f9f9f9;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+#peerStats div:hover {
+  background-color: #fff0f7;
+  transform: translateX(5px);
+}
+
+#totalPieces {
+  font-weight: bold;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: #ff2a73;
+  padding: 10px 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(255, 79, 158, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  section {
+    padding: 30px 20px;
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  header {
+    padding: 40px 15px 30px;
+  }
+  
+  section {
+    padding: 25px 15px;
+    border-radius: 15px;
+  }
+  
+  button,
+  .copy-button,
+  .paste-button {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+  
+  input,
+  textarea {
+    padding: 12px 15px;
+    font-size: 1rem;
+  }
+  
+  .song-details,
+  #peerStats,
+  .chunk-container {
+    padding: 15px;
+  }
+  
+  .chunk-container {
+    max-height: 250px;
+  }
+}
+
+/* Adding animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+header, section {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+section:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
