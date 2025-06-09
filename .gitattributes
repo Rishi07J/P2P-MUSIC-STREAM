@@ -1,1 +1,2 @@
-*.css liguist-language=JS
+*.css liguist-language=js
+*.js liguist-language=js
